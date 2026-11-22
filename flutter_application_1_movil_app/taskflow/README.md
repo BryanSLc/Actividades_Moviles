@@ -65,3 +65,9 @@ DELETE /tasks/:id  eliminar tarea
 
 La API concreta se elegirá después. Estas rutas son requisitos, no
 direcciones de un servidor ya conectado.
+
+TaskFlow muestra primero mis ocho tareas locales y, a continuación, las
+tareas obtenidas de la API. A los ids remotos se les suma 1000 para que no
+coincidan con los ids locales. Las tareas locales se definen en
+LocalTaskRepository y las remotas se consultan con TaskApiService.
+CombinedTaskRepository las une en una sola lista.

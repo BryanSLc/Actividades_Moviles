@@ -43,10 +43,34 @@ class LocalTaskRepository implements TaskRepository {
       isCompleted: false,
       userId: 1,
     ),
+    const Task(
+      id: 6,
+      title: 'Implementar la navegación',
+      description: 'Configurar go_router y las rutas de lista y detalle',
+      priority: 'Alta',
+      isCompleted: true,
+      userId: 1,
+    ),
+    const Task(
+      id: 7,
+      title: 'Conectar la app a una API',
+      description: 'Consultar las tareas con Dio y convertir el JSON',
+      priority: 'Media',
+      isCompleted: false,
+      userId: 1,
+    ),
+    const Task(
+      id: 8,
+      title: 'Preparar la presentación final',
+      description: 'Armar las diapositivas y practicar la demostración',
+      priority: 'Baja',
+      isCompleted: false,
+      userId: 1,
+    ),
   ];
 
   @override
-  List<Task> getTasks() => List.unmodifiable(_tasks);
+  Future<List<Task>> getTasks() async => List.unmodifiable(_tasks);
 
   @override
   void save(Task task) {

@@ -8,7 +8,7 @@ void main() {
   testWidgets('Muestra la lista de tareas', (WidgetTester tester) async {
     await tester.pumpWidget(
       ChangeNotifierProvider<TasksViewModel>(
-        create: (_) => TasksViewModel(LocalTaskRepository()),
+        create: (_) => TasksViewModel(LocalTaskRepository())..loadTasks(),
         child: const TaskFlowApp(),
       ),
     );
