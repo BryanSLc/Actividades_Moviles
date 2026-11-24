@@ -71,3 +71,37 @@ tareas obtenidas de la API. A los ids remotos se les suma 1000 para que no
 coincidan con los ids locales. Las tareas locales se definen en
 LocalTaskRepository y las remotas se consultan con TaskApiService.
 CombinedTaskRepository las une en una sola lista.
+
+
+## Estados de la lista de tareas
+
+La pantalla de tareas distingue cuatro situaciones. Todas se controlan desde
+TasksViewModel, que avisa a la vista con notifyListeners.
+
+- Carga: mientras se espera la respuesta, se muestra un indicador circular.
+  Se activa con isLoading = true y evita lanzar dos consultas a la vez.
+- Éxito: la respuesta contiene tareas y se dibuja una tarjeta por cada Task.
+- Vacío: la consulta terminó bien pero la lista tiene cero tareas. Se muestra
+  "Todavía no hay tareas para mostrar." y el botón Actualizar.
+- Error: la consulta falló (red, servidor o formato). Se muestra "No se
+  pudieron cargar las tareas." y el botón Reintentar. La excepción técnica
+  se escribe solo en la consola.
+
+Vacío y error son distintos: una lista vacía es una respuesta válida, y un
+error significa que no sabemos qué tareas hay.
+
+### Cómo provoqué cada estado
+- Carga: limité la red a "Slow 4G" en las herramientas de Chrome (F12, pestaña
+  Network) y actualicé la lista.
+- Éxito: con internet, la lista muestra mis ocho tareas locales y las de la
+  API del usuario 1.
+- Error: con la app abierta, apagué el wifi y pulsé el ícono de actualizar.
+- Reintento: encendí el wifi y pulsé Reintentar; la lista volvió sin
+  reiniciar la aplicación.
+- Vacío: cambié temporalmente TaskApiService.userId a 9999 y usé solo
+  RemoteTaskRepository, porque ese usuario no tiene tareas. Después restauré
+  userId = 1 y el repositorio combinado.
+
+Limitación: marcar una tarea como completada solo cambia la copia en memoria.
+Al actualizar, la lista se vuelve a pedir y esa marca se pierde. La
+persistencia de cambios se estudiará en las sesiones de CRUD.
