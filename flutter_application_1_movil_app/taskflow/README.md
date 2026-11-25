@@ -105,3 +105,32 @@ error significa que no sabemos qué tareas hay.
 Limitación: marcar una tarea como completada solo cambia la copia en memoria.
 Al actualizar, la lista se vuelve a pedir y esa marca se pierde. La
 persistencia de cambios se estudiará en las sesiones de CRUD.
+
+
+
+## Formulario de tareas
+
+TaskFlow incluye una pantalla "Nueva tarea" (ruta /new), accesible desde el
+botón flotante de la lista. El formulario valida los datos antes de preparar
+una tarea nueva.
+
+### Campos y validaciones
+- Título: obligatorio, mínimo 3 caracteres. Mensajes: "Escribe un título para
+  la tarea." y "El título debe tener al menos 3 caracteres."
+- Descripción: obligatoria, mínimo 5 caracteres. Mensajes: "Describe
+  brevemente la tarea." y "La descripción debe tener al menos 5 caracteres."
+- Prioridad: lista desplegable con Alta, Media y Baja (por defecto Media).
+- Fecha límite: opcional, se elige con showDatePicker. No se exige para
+  guardar y se puede quitar.
+
+### Cómo funciona
+Form agrupa los campos y GlobalKey<FormState> permite llamar a validate()
+antes de guardar. Cada TextFormField tiene un validator que devuelve un
+mensaje si el dato es inválido y null si es válido. Los
+TextEditingController permiten leer el texto y se liberan en dispose().
+Al guardar, el formulario devuelve un TaskDraft a la lista con context.pop,
+y la lista muestra un mensaje. Cancelar regresa sin mensaje.
+
+Limitación: el formulario todavía no envía datos a la API ni agrega la tarea
+a la lista. El mensaje verifica el retorno del borrador y no representa una
+creación remota. La conexión con POST se hará en la sesión 10.
