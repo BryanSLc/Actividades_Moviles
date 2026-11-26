@@ -134,3 +134,36 @@ y la lista muestra un mensaje. Cancelar regresa sin mensaje.
 Limitación: el formulario todavía no envía datos a la API ni agrega la tarea
 a la lista. El mensaje verifica el retorno del borrador y no representa una
 creación remota. La conexión con POST se hará en la sesión 10.
+
+
+## CRUD de tareas (POST, PATCH y DELETE)
+
+TaskFlow envía cambios a JSONPlaceholder y actualiza la lista solo después de
+recibir una respuesta correcta.
+
+### Operaciones
+- Crear (POST /todos): el formulario "Nueva tarea" llama a createTask. La API
+  responde HTTP 201. Se envían title, completed y userId.
+- Editar (PATCH /todos/{id}): el botón "Editar título" del detalle abre un
+  diálogo. Se envían title y completed. La API responde HTTP 200.
+- Eliminar (DELETE /todos/{id}): el botón "Eliminar tarea" pide confirmación
+  antes de llamar a deleteTask. La API responde HTTP 200.
+
+### Flujo de cada operación
+Pantalla -> TasksViewModel -> TaskRepository -> TaskApiService -> API.
+El ViewModel espera la respuesta con await y solo después modifica su lista y
+avisa con notifyListeners. Si la petición falla, se muestra un SnackBar de
+error y no se muestra mensaje de éxito.
+
+### Tareas locales y tareas de la API
+Mis tareas propias (ids locales) no existen en el servidor, por lo que sus
+cambios solo se guardan en memoria. Las tareas de la API (id desplazado en
+1000) sí envían PATCH y DELETE con su id real. Al crear una tarea se envía el
+POST, pero la tarea se conserva en el repositorio local porque la API no la
+guarda.
+
+### JSONPlaceholder simula las escrituras
+La API responde como si hubiera guardado el cambio, pero no lo persiste. Al
+actualizar la lista, los cambios hechos a tareas de la API vuelven a su valor
+original. La descripción, la prioridad y la fecha límite del formulario no se
+envían, porque la API solo conoce title, completed y userId.
